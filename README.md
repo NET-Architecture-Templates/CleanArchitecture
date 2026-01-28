@@ -1,33 +1,32 @@
 # Clean Architecture – Project Template
 
-Este repositório é um **template exemplo** de Clean Architecture para projetos em .NET.  
-Ele **não é um framework**, nem uma solução fechada, e **não deve ser usado como boilerplate rígido**.
+This repository is an **example template** of Clean Architecture for .NET projects.  
+It is **not a framework**, nor a closed solution, and **should not be used as a rigid boilerplate**.
 
-O objetivo é **demonstrar uma organização de projetos**, responsabilidades e limites arquiteturais
-que podem ser adaptados conforme o contexto do sistema.
-
----
-
-## 🎯 Objetivo do Template
-
-Este template existe para:
-
-- Demonstrar **separação clara de responsabilidades**
-- Servir como **referência arquitetural** para projetos .NET
-- Apoiar **decisões arquiteturais conscientes**
-- Facilitar **testabilidade, manutenção e evolução**
-- Evitar acoplamentos comuns (ex: API dependente de EF/Core ou infraestrutura vazando para o domínio)
-
-> ⚠️ **Importante**  
-> Este repositório **não tenta resolver todos os cenários** nem impor regras absolutas.  
-> Clean Architecture é um **guia**, não uma receita fixa.
+The goal is to **demonstrate a project organization**, responsibilities and architectural boundaries
+that can be adapted according to the system's context.
 
 ---
 
-## 🧱 Estrutura de Projetos
+## 🎯 Template Objective
 
-A solução é organizada em camadas, cada uma com uma responsabilidade clara.
+This template exists to:
 
+- Demonstrate **clear separation of responsibilities**
+- Serve as **architectural reference** for .NET projects
+- Support **conscious architectural decisions**
+- Facilitate **testability, maintenance and evolution**
+- Avoid common couplings (e.g.: API dependent on EF/Core or infrastructure leaking into domain)
+
+> ⚠️ **Important**  
+> This repository **does not attempt to solve all scenarios** nor impose absolute rules.  
+> Clean Architecture is a **guide**, not a fixed recipe.
+
+---
+
+## 🧱 Project Structure
+
+The solution is organized in layers, each with a clear responsibility.
 ```
 src/
  ├── Api/
@@ -39,170 +38,171 @@ src/
      └── Application.Tests
 ```
 
-## 🧠 Visão Geral das Camadas
+## 🧠 Layers Overview
 
 ### 🔹 Domain
 
-**Responsabilidade:**  
-Representar o núcleo do negócio.
+**Responsibility:**  
+Represent the business core.
 
-**Contém:**
-- Entidades
+**Contains:**
+- Entities
 - Value Objects
-- Regras de negócio
-- Interfaces (contratos) de repositórios
-- Exceções de domínio
+- Business rules
+- Repository interfaces (contracts)
+- Domain exceptions
 
-**Não contém:**
+**Does not contain:**
 - Frameworks
-- Acesso a banco de dados
+- Database access
 - HTTP / Controllers
 - Logging
-- Dependências externas
+- External dependencies
 
-> O domínio não sabe que o sistema é uma API nem como os dados são persistidos.
+> The domain doesn't know the system is an API nor how data is persisted.
 
 ---
 
 ### 🔹 Application
 
-**Responsabilidade:**  
-Orquestrar os casos de uso do sistema.
+**Responsibility:**  
+Orchestrate the system's use cases.
 
-**Contém:**
+**Contains:**
 - Services / Use Cases
 - DTOs
-- Interfaces de serviços externos
-- Regras de aplicação
-- Validações de fluxo
+- External service interfaces
+- Application rules
+- Flow validations
 
-**Aqui ficam decisões como:**
-- Criar ou atualizar entidades
-- Orquestrar múltiplas operações
-- Coordenar chamadas a repositórios e serviços
+**Here are decisions like:**
+- Create or update entities
+- Orchestrate multiple operations
+- Coordinate calls to repositories and services
 
-> A camada Application depende apenas do Domain.
+> The Application layer depends only on Domain.
 
 ---
 
 ### 🔹 Infrastructure
 
-**Responsabilidade:**  
-Implementar detalhes técnicos.
+**Responsibility:**  
+Implement technical details.
 
-**Contém:**
-- Implementações de repositórios
-- Persistência (SQL, MongoDB, etc.)
-- Integrações externas
-- Serviços de terceiros
-- Configurações técnicas
+**Contains:**
+- Repository implementations
+- Persistence (SQL, MongoDB, etc.)
+- External integrations
+- Third-party services
+- Technical configurations
 
-Essa camada implementa interfaces definidas no Domain ou Application.
+This layer implements interfaces defined in Domain or Application.
 
-> Infrastructure é substituível.  
-> Domain não deveria ser.
+> Infrastructure is replaceable.  
+> Domain shouldn't be.
 
 ---
 
 ### 🔹 API
 
-**Responsabilidade:**  
-Expor o sistema para o mundo externo.
+**Responsibility:**  
+Expose the system to the external world.
 
-**Contém:**
+**Contains:**
 - Controllers
-- Filtros
+- Filters
 - Middlewares
-- Configuração de Dependency Injection
-- Versionamento de API
+- Dependency Injection configuration
+- API versioning
 
-**A API:**
-- Não contém regra de negócio
-- Não acessa banco diretamente
-- Atua apenas como camada de entrada
+**The API:**
+- Does not contain business rules
+- Does not access database directly
+- Acts only as entry layer
 
 ---
 
 ### 🔹 Tests
 
-Separação clara de testes por camada:
+Clear separation of tests by layer:
 
 - **Domain.Tests**  
-  Testa regras de negócio puras, sem dependências externas.
+  Tests pure business rules, without external dependencies.
 
 - **Application.Tests**  
-  Testa casos de uso, fluxos e orquestrações.
+  Tests use cases, flows and orchestrations.
 
 ---
 
-## 🔄 Fluxo de Dependências
+## 🔄 Dependency Flow
 
-A principal regra da Clean Architecture:
-
+The main Clean Architecture rule:
+```
 API → Application → Domain
 Infrastructure → Application / Domain (via interfaces)
+```
 
-**Nunca:**
+**Never:**
 - Domain → Infrastructure
 - Domain → API
-- Application → Infrastructure diretamente
+- Application → Infrastructure directly
 
 ---
 
-## 🧩 Quando Usar Este Template
+## 🧩 When to Use This Template
 
-Este template é indicado quando:
-- O sistema possui regras de negócio relevantes
-- Existe complexidade além de CRUD
-- Testabilidade é importante
-- O projeto tende a crescer
-- Manutenibilidade e evolução são prioridades
-
----
-
-## 🚫 Quando NÃO Usar
-
-Evite este template quando:
-- O projeto é extremamente simples
-- É um MVP descartável
-- Scripts, automações pequenas ou provas de conceito
-- APIs temporárias ou de curta duração
-
-> Overengineering também é um problema arquitetural.
+This template is indicated when:
+- The system has relevant business rules
+- There is complexity beyond CRUD
+- Testability is important
+- The project tends to grow
+- Maintainability and evolution are priorities
 
 ---
 
-## ⚙️ Adapte ao Contexto
+## 🚫 When NOT to Use
 
-Você não precisa:
-- Criar todas as camadas desde o início
-- Seguir exatamente os nomes dos projetos
-- Usar todas as pastas sugeridas
+Avoid this template when:
+- The project is extremely simple
+- It's a disposable MVP
+- Small scripts, automations or proof of concepts
+- Temporary or short-lived APIs
 
-Use este repositório como:
-- Guia
-- Referência
-- Base para discussão arquitetural
+> Overengineering is also an architectural problem.
 
 ---
 
-## 🧠 Filosofia
+## ⚙️ Adapt to Context
 
-> “Arquitetura existe para proteger o negócio de mudanças técnicas.”
+You don't need to:
+- Create all layers from the start
+- Follow exactly the project names
+- Use all suggested folders
 
-Se trocar:
-- Banco de dados
+Use this repository as:
+- Guide
+- Reference
+- Base for architectural discussion
+
+---
+
+## 🧠 Philosophy
+
+> "Architecture exists to protect business from technical changes."
+
+If you change:
+- Database
 - Framework
-- Infraestrutura
-- Protocolo (REST → gRPC)
+- Infrastructure
+- Protocol (REST → gRPC)
 
-…o impacto no domínio deve ser mínimo.
+…the impact on domain should be minimal.
 
 ---
 
-## 📌 Observações Finais
+## 📌 Final Notes
 
-Este template representa uma interpretação prática de Clean Architecture no ecossistema .NET.  
-Não é a única forma correta — e nem pretende ser.
+This template represents a practical interpretation of Clean Architecture in the .NET ecosystem.  
+It's not the only correct way — and doesn't claim to be.
 
-O foco é clareza, separação de responsabilidades e evolução sustentável.
+The focus is clarity, separation of responsibilities and sustainable evolution.
