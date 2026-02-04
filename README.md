@@ -206,3 +206,18 @@ This template represents a practical interpretation of Clean Architecture in the
 It's not the only correct way — and doesn't claim to be.
 
 The focus is clarity, separation of responsibilities and sustainable evolution.
+
+
+## How to run the application
+
+Have Docker installed.
+
+```bash
+docker-compose up -d --build
+```
+
+Access the application at ` http://localhost:8080/scalar/v1.`
+
+```bash
+docker-compose down
+```
